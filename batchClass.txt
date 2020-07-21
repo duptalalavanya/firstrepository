@@ -1,0 +1,34 @@
+global class GenericBatchClass implements Database.Batchable<sObject>{
+    global final String queryforFetchingRecords;
+    global final String ObjectToBeUpdated;//object
+    global final String FieldToBeUpdated;//field to be updated
+    global final String ValueToBeUpdated;//value the field with which it should be updated
+    //   private String whereClause;//where clause for the query
+    
+    
+    global GenericBatchClass(String q, String o, String f, String v){
+        queryforFetchingRecords=q; ObjectToBeUpdated=o; FieldToBeUpdated=f;ValueToBeUpdated=v;
+    }
+    
+    global Database.QueryLocator start(Database.BatchableContext BC){
+        return Database.getQueryLocator(queryforFetchingRecords);
+    }
+    
+    global void execute(Database.BatchableContext BC,List<sObject> scope){
+        for(Sobject objsObject : scope){
+            objsObject.put(FieldToBeUpdated,ValueToBeUpdated); 
+        }      
+        update scope;
+    }
+    
+    global void finish(Database.BatchableContext BC){
+        /*how to call the batch in AW
+    String e = 'Account'; // Object to be updated
+    String f = 'AccountSource'; // field to be updated.
+    String v = 'Purchased List'; // value with which field will be populated.
+    String q = 'SELECT ' + f + ' FROM ' + e +' where IsCustomerPortal=false';  // Query to which more filters can be added like: + 'AND IsConverted = false';
+    Id batchInstanceId1 = Database.executeBatch(new GenericBatchClass(q,e,f,v));
+*/
+    }
+    
+}
